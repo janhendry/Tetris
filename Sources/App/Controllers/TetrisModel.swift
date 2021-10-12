@@ -9,13 +9,14 @@ import Vapor
 
 
 class TetrisModel{
-    static var users: [UUID:User] = [:]
+    static var users: [String:WebSocket] = [:]
     
-    static func login(name: String) -> LoginResponse{
-        let id = UUID()
-        let newUser = User(name: name, wins: 0)
-        users[id] = newUser
-        return .init(id: id, newUser)
+    static func login(_ id: String,_ ws: WebSocket) -> Bool{
+        if (users[id] != nil ){
+            return false
+        }
+        users[id] = ws
+        return true
     }
     
     static func action(_ action: ActionRequest){

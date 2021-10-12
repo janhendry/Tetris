@@ -9,25 +9,19 @@ import Vapor
 
 
 class TetrisScreens{
-    static var sockets: [WebSocket] = []
+    static var sockets: [String:WebSocket] = [:]
     
-    static func connect(ws: WebSocket){
-        sockets.append(ws)
-        ws.onText({ update(text: $1) })
-        ws.onClose.whenSuccess{ close() }
+    static func connect(id: String,ws: WebSocket){
+        sockets[id] = ws
+        
+        print("log in \(id)")
+        
+        sockets.forEach{ print($0) }
+        ws.onText{update(id, text: $1) }
+        ws.onClose.whenSuccess{ sockets.removeValue(forKey: id)}
     }
-    
-    static func close(){
-        sockets.removeAll(where: {$0.isClosed})
+   
+    static func update(_ id: String, text: String){
+        sockets.forEach{ $1.send(text) }
     }
-    
-    static func update(text: String){
-        sockets.forEach{ $0.send(text) }
-    }
-}
-
-
-struct Screen: Codable{
-    let id:UUID
-    let view: [[Int]]
 }
