@@ -7,21 +7,26 @@
 import Vapor
 import JSONCoderIO
 
-
-var list: [WebSocket] = []
-
 func webSocket(_ app: Application){
     
-    
+
     //let gameSystem = GameSystem(eventLoop: app.eventLoopGroup.next())
-    
-    app.webSocket("screen",":id"){ req, ws in
-        if let id = req.parameters.get("id") {
-            TetrisScreens.connect(id: id, ws: ws)
-        }else{
-            ws.close()
+    app.webSocket("stream",":streamID",":clientID"){ req, ws in
+        guard let streamID = req.parameters.get("streamID"), let clientID = req.parameters.get("clientID") else {
+            _ = ws.close()
+            return
         }
+        WebSocketStream.connect(streamID, clientID, ws: ws)
     }
+    
+    app.webSocket("screen",":clientID"){ req, ws in
+        guard let clientID = req.parameters.get("clientID") else{
+            _ = ws.close()
+            return
+        }
+        WebSocketStream.connect("Tetris", clientID, ws: ws)
+    }
+    
     
 //    app.webSocket("action"){ req, ws in
 //        ws.onText{ ws ,text in

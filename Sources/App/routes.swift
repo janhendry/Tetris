@@ -4,13 +4,13 @@ func routes(_ app: Application) throws {
     app.get { req in
         return "Yeah you get a response from TetrisServer by janehndry!"
     }
-    
-    app.get("updateView",":id"){ req -> HTTPStatus in
-        guard let id = req.parameters.get("id") else {
-            return HTTPStatus.internalServerError
-        }
-        return TetrisController.updateView(id) ? HTTPStatus.ok : HTTPStatus.badRequest
-    }
+//    
+//    app.get("updateStream",":id"){ req -> HTTPStatus in
+//        guard let id = req.parameters.get("id") else {
+//            return HTTPStatus.internalServerError
+//        }
+//        return .updateView("Tetris",id) ? HTTPStatus.ok : HTTPStatus.badRequest
+//    }
     
     
     
