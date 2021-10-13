@@ -99,7 +99,7 @@ class TetrisController{
                 item.value.isEnd ? true : reult
             })
             isRunning = end
-            sendAll(data: ActionResponse(action: .gameEnd))
+            sendAll(data: ActionResponse(action: .gameEnd, data: nil))
         }
         
         
