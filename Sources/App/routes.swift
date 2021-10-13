@@ -5,6 +5,15 @@ func routes(_ app: Application) throws {
         return "Yeah you get a response from TetrisServer by janehndry!"
     }
     
+    app.get("updateView",":id"){ req -> HTTPStatus in
+        guard let id = req.parameters.get("id") else {
+            return HTTPStatus.internalServerError
+        }
+        return TetrisController.updateView(id) ? HTTPStatus.ok : HTTPStatus.badRequest
+    }
+    
+    
+    
 //    app.get("action"){ req -> HTTPStatus in
 //        let action = try req.content.decode(ActionRequest.self)
 //        return HTTPStatus.ok
@@ -20,23 +29,9 @@ struct LoginRequest: Content{
 struct LoginResponse: Content{
     let id: String
     let name: String
-    let wins: Int
     
     init(id: UUID, _ user: User){
         self.id = id.uuidString
         name = user.name
-        wins = user.wins
     }
-}
-
-struct ActionRequest : Codable, Content{
-    let id: String
-    let action: String
-}
-
-enum Action:Codable,Content{
-    case Join
-    case Leaf
-    case singleLine
-    case doubleLine
 }
